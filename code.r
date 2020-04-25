@@ -19,10 +19,14 @@ for (row in 1:nrow(news_data)){
   else{
     activity[row]="Normal"
   }
-  verified[row]=unlist(news_data[row,"verified"])
+  if(unlist(news_data[row,"verified"] == TRUE)){
+    verified[row]= "YES"
+  }else {
+    verified[row]= "NO"
+  }
   country[row]=unlist(news_data[row,"location"])
   followers[row]=unlist(news_data[row,"followers_count"])
-  isfake[row]= "No"
+  isfake[row]= "NO"
   training_data = data.frame(username,tweet,activity,verified,country,followers,isfake);
   save_as_csv(training_data, "training_data.csv", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
 }
