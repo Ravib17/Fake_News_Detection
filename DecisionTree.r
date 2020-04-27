@@ -9,6 +9,7 @@ twitter_dataset$activity <- as.factor(twitter_dataset$activity)
 twitter_dataset$twt_source <- as.factor(twitter_dataset$twt_source)
 twitter_dataset$verified <- as.factor(twitter_dataset$verified)
 twitter_dataset$country <- as.factor(twitter_dataset$country)
+twitter_dataset$followers <- as.factor(twitter_dataset$followers)
 twitter_dataset$isfake <- as.factor(twitter_dataset$isfake)
 
 # drop missing values ie values with NA

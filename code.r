@@ -1,7 +1,7 @@
 library(rtweet)
 #devtools::install_github("hrbrmstr/nominatim")
 library(nominatim)
-news_data <- read_twitter_csv("100_corona.csv",unflatten = FALSE)
+news_data <- read_twitter_csv("palghar_dataset.csv",unflatten = FALSE)
 vec_index = 1
 username <- c()
 tweet    <-c()
@@ -12,7 +12,7 @@ country  <-c()
 followers <-c()
 isfake   <-c()
 
-for (row in 1:400){
+for (row in 1:300){
   if(is.na(news_data[row,"location"]) ==  FALSE ) {
     
     user_loc = nominatim::osm_geocode(unlist(news_data[row,"location"]),key=getOption("OSM_API_KEY","QKD8MG1qHwLyPAgmtZ9MTFAdHaHt1C5a"))
@@ -21,7 +21,10 @@ for (row in 1:400){
     
     username[vec_index]=unlist(news_data[row,"screen_name"])
     tweet[vec_index]=unlist(news_data[row,"text"])
-    if(nrow(subset(news_data,news_data$screen_name==username[row]) ) > 17){
+    print(nrow(subset(news_data,news_data$screen_name==username[vec_index])))
+    print(nrow(subset(news_data,news_data$screen_name==username[vec_index])) > 7)
+    if(nrow(subset(news_data,news_data$screen_name==username[vec_index])) > 7){
+     
       activity[vec_index]="Suspecious"
     }
     else{
@@ -70,13 +73,8 @@ tweets_data <- na.omit(tweets_data)
 #View(training_data)
 #View(testing_data)
 
-save_as_csv(tweets_data, "100_corona_training.csv", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+save_as_csv(tweets_data, "palghar_dataset_training3.csv", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
 #save_as_csv(testing_data, "testing_data1.csv", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
 
 
 
-
-
-
-#library(httr)
-#dat<-GET("https://www.googleapis.com/customsearch/v1?key=AIzaSyAUKRDBSuaXvzTEpn13OLkio5NVwTYZhis&cx=017137198569103930420:hpuryupuqkn&q=covid")
