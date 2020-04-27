@@ -33,7 +33,7 @@ library(C50)
 sapply(training_data,class)
 
 #training_data where column 3 to 5 are deciding final class label
-decisionTreeModel <- C50 :: C5.0(training_data[,c(3:5)], training_data$isfake)
+decisionTreeModel <- C50 :: C5.0(training_data[,c(1:5)], training_data$isfake)
 decisionTreeModel
 summary(decisionTreeModel) 
 
@@ -43,10 +43,10 @@ testing_data$activity <- as.factor(testing_data$activity)
 testing_data$activity
 
 #prediction on testing data
-tweet_predict <- predict(decisionTreeModel, newdata = testing_data[,c(3:5)], type = "class")
+tweet_predict <- predict(decisionTreeModel, newdata = testing_data[,c(1:5)], type = "class")
 
 #If want prediction on the basis of probability
-#tweet_predict <- predict(decisionTreeModel, newdata = testing_data[,c(3:5)], type = "prob")
+#tweet_predict <- predict(decisionTreeModel, newdata = testing_data[,c(1:5)], type = "prob")
 
 #for getting accuracy of model
 confusion_mat <- table(testing_data$isfake, tweet_predict)
@@ -57,10 +57,10 @@ print(paste('Accuracy of decision tree is ', accuracy_Tree, '%.'))
 
 #******************************************************************************
 #Applying boosting with multiple trials
-tree_with_trials <- C5.0(training_data[,c(3:5)], y = training_data$isfake, trials = 15)
+tree_with_trials <- C5.0(training_data[,c(1:5)], y = training_data$isfake, trials = 15)
 summary(tree_with_trials)
 
-tweet_predict <- predict(tree_with_trials, newdata = testing_data[,c(3:5)], type = "class")
+tweet_predict <- predict(tree_with_trials, newdata = testing_data[,c(1:5)], type = "class")
 
 #for getting accuracy of model ie(accuracy = (TP + TN) / (TP + TN + FP + FN))
 confusion_mat <- table(testing_data$isfake, tweet_predict)
