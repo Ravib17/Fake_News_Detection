@@ -2,7 +2,8 @@
 twitter_dataset <- read.csv(file.choose(),header= T,stringsAsFactors = FALSE)
 
 #converting numeric to nominal data
-twitter_dataset$followers <- cut(twitter_dataset$followers, breaks = c(0, 50, 200, 700000000), labels = c("Less", "Medium", "High"))
+
+#twitter_dataset$followers <- cut(twitter_dataset$followers, breaks = c(0, 50, 200, 700000000), labels = c("Less", "Medium", "High"))
 
 #factorize character value
 twitter_dataset$activity <- as.factor(twitter_dataset$activity)
@@ -24,36 +25,16 @@ tweet_index <- sample(seq_len(nrow(twitter_dataset)), size = train_size)
 training_data <- twitter_dataset[tweet_index,]
 testing_data <- twitter_dataset[-tweet_index,]
 
+
 set.seed(1235)
-
-#for decision tree
-library(C50)
-
-#determining class of all columns in training_data dataframe
+library(e1071)
 sapply(training_data,class)
-
-#training_data where column 3 to 5 are deciding final class label
-decisionTreeModel <- C50 :: C5.0(training_data[,c(1:5)], training_data$isfake)
-decisionTreeModel
-summary(decisionTreeModel) 
-
-#to draw decision tree
-plot(decisionTreeModel)
-testing_data$activity <- as.factor(testing_data$activity)
-testing_data$activity
-
-#prediction on testing data
-tweet_predict <- predict(decisionTreeModel, newdata = testing_data[,c(1:5)], type = "class")
-
-#If want prediction on the basis of probability
-#tweet_predict <- predict(decisionTreeModel, newdata = testing_data[,c(1:5)], type = "prob")
-
+tweets_NB_classifier <- naiveBayes(isfake~., data = training_data)
+tweets_NB_predict <- predict(tweets_NB_classifier,testing_data)
 library(gmodels)
-CrossTable(tweet_predict,testing_data$isfake,prop.chisq = FALSE, prop.t = FALSE, prop.r = FALSE,
+CrossTable(tweets_NB_predict,testing_data$isfake,prop.chisq = FALSE, prop.t = FALSE, prop.r = FALSE,
            dnn = c('predicted','actual'))
-
-#for getting accuracy of model
 confusion_mat <- table(testing_data$isfake, tweet_predict)
 accuracy_Tree <- sum(diag(confusion_mat)) / sum(confusion_mat)
 accuracy_Tree <- accuracy_Tree * 100.0;
-print(paste('Accuracy of decision tree is ', accuracy_Tree, '%.'))
+print(paste('Accuracy ', accuracy_Tree, '%.'))
